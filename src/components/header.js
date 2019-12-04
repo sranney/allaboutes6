@@ -1,42 +1,33 @@
-import { Link } from "gatsby"
-import PropTypes from "prop-types"
-import React from "react"
+import { StyledLink } from '../helpers/styled-components/typography';
+import PropTypes from 'prop-types';
+import React from 'react';
+import styled from 'styled-components';
+import tw from 'tailwind.macro';
+
+const StyledHeader = styled.header`
+    background-color: transparent;
+    ${tw`m-6 mt-0 text-center md:text-left`};
+`;
+const SiteTitleContainer = styled.div`
+    ${tw`mx-auto max-w-full px-5 pt-4 pb-6`};
+`;
 
 const Header = ({ siteTitle }) => (
-  <header
-    style={{
-      background: `rebeccapurple`,
-      marginBottom: `1.45rem`,
-    }}
-  >
-    <div
-      style={{
-        margin: `0 auto`,
-        maxWidth: 960,
-        padding: `1.45rem 1.0875rem`,
-      }}
-    >
-      <h1 style={{ margin: 0 }}>
-        <Link
-          to="/"
-          style={{
-            color: `white`,
-            textDecoration: `none`,
-          }}
-        >
-          {siteTitle}
-        </Link>
-      </h1>
-    </div>
-  </header>
-)
+    <StyledHeader>
+        <SiteTitleContainer>
+            <h1 style={{ margin: 0 }}>
+                <StyledLink to="/">{siteTitle}</StyledLink>
+            </h1>
+        </SiteTitleContainer>
+    </StyledHeader>
+);
 
 Header.propTypes = {
-  siteTitle: PropTypes.string,
-}
+    siteTitle: PropTypes.string,
+};
 
 Header.defaultProps = {
-  siteTitle: ``,
-}
+    siteTitle: ``,
+};
 
-export default Header
+export default Header;
