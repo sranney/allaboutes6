@@ -640,6 +640,137 @@ const {prop:y} = {};
             {
                 title: 'Parameter List Destructuring',
                 key: 4,
+                subsections: [
+                    [
+                        {
+                            type: 'section title',
+                            content: 'A really cool new function feature',
+                            key: '000',
+                        },
+                        {
+                            type: 'paragraph',
+                            content:
+                                "Now, all of this destructuring structure would have been good enough, but TC39 didn't leave it at that. They changed function structure to allow destructuring to be done in function parameters. Everything that we have been going over here so far, and a little more still to come, will work in function parameter destructuring.",
+                            key: '001',
+                        },
+                    ],
+                    [
+                        {
+                            type: 'section title',
+                            content: 'Some Basic Examples',
+                            key: '000',
+                        },
+                        {
+                            type: 'code',
+                            content: `
+const func = ({one= 1, two= 2, three= 3}) => one + two + three;
+/*what do we expect this to log?*/
+console.log(func({one = 5}));//A
+
+const func2 = ([one,two,three]) => one + two + three;
+/*what do we expect this to log?*/
+console.log(func2([1,2,3]));//B
+`,
+                            key: '001',
+                        },
+                        {
+                            type: 'code results',
+                            content:
+                                '10 is logged from line A; 6 is logged from line B',
+                            key: '002',
+                        },
+                    ],
+                    [
+                        {
+                            type: 'section title',
+                            content: 'Some more interesting examples',
+                            key: '000',
+                        },
+                        {
+                            type: 'code',
+                            content: `
+const ParamError = () => {
+    throw new Error('need to provide parameter with name required!');
+};
+
+const func1 = ({one=1,required=ParamError()}) => one + required;
+
+/*what does this log?*/
+console.log(func1({one: 5}));//A
+
+/*what does this log?*/
+console.log(func1({required: 10}));//B
+`,
+                            key: '001',
+                        },
+                        {
+                            type: 'code results',
+                            content:
+                                'line A throws an error because the default value of required, ParamError, is a function which will throw an error when called - required is not provided in this function call, so ParamError is called; line B is 11 because one defaults to 1, so 10 + 1 = 11',
+                            key: '002',
+                        },
+                    ],
+                    [
+                        {
+                            type: 'section title',
+                            content:
+                                "And, of course, I'm going to tie this back to React",
+                            key: '000',
+                        },
+                        {
+                            type: 'paragraph',
+                            content:
+                                'React is seemingly pushing towards completely function components.',
+                            key: '001',
+                        },
+                        {
+                            type: 'paragraph',
+                            content:
+                                'It is an important best practice to provide default values for props.',
+                            key: '002',
+                        },
+                        {
+                            type: 'paragraph',
+                            content:
+                                'With destructuring and default values, you can do all of this in the parameter list for props',
+                            key: '003',
+                        },
+                        {
+                            type: 'code',
+                            content: `
+const Button = ({color= 'blue', borderColor= 'blue', children= 'Click!'}) => 
+    <button color={color} borderColor={borderColor}>{children}</button>;
+
+const ButtonContainer = () => {
+    <>
+        <Button color='red'/>//A
+        <Button borderColor='black'>Hello!</Button>//B
+    </>
+};
+`,
+                            key: '004',
+                        },
+                        {
+                            type: 'code results',
+                            content:
+                                'A is a button that has a red font, blue border and has Click! as the text rendered in it. B is a button that has a blue font, black border and renders the text Hello!',
+                            key: '005',
+                        },
+                    ],
+                    [
+                        {
+                            type: 'section title',
+                            content: 'These are just a few examples',
+                            key: '000',
+                        },
+                        {
+                            type: 'paragraph',
+                            content:
+                                "We'll review some additional function parameter destructuring examples in a bit.",
+                            key: '001',
+                        },
+                    ],
+                ],
             },
             {
                 title: 'Nested Destructuring Patterns',
@@ -739,15 +870,159 @@ console.log(xyz);/*we already saw from earlier that this is 'xyz'*/
                         },
                         {
                             type: 'code',
-                            content: `/*arrays are iterables, so for...of loops work on arrays*/
-for( const x of [1,2,3]) {
+                            content: `/*for...of loops work on iterables*/
+for( const x of [1,2,3] ) {
     console.log(x);
 }
-/*what does this give us?*/
-                            `,
+
+/*we can also destructure x if the iterable has elements that are objects or arrays (or other iterables)*/
+for (const [a,b] of [[1,2],[3,4]]) {
+    console.log(\`\${a}:\`,b);
+}
+`,
                             key: '001',
                         },
-                        {},
+                        {
+                            type: 'code results',
+                            content: "logged is what is expected: '1:2', '3:4'",
+                            key: '002',
+                        },
+                    ],
+                    [
+                        {
+                            type: 'section title',
+                            content: 'Rest operator',
+                            key: '000',
+                        },
+                        {
+                            type: 'paragraph',
+                            content:
+                                'This is one of my favorite constructs of ES6. Super compact, but very flexible and powerful. You can gather all of the remaining elements of an iterable into one variable by simply doing the following:',
+                            key: '001',
+                        },
+                        {
+                            type: 'code',
+                            content: `
+/*basic application of rest operator*/
+/*with arrays*/
+const [a,...b] = [1,2,3,4];
+//b = [2,3,4]
+/*enter destructuring - what are two, three and four?*/
+const [one,...[,,four]] = [1,2,3,4];
+`,
+                            key: '002',
+                        },
+                        {
+                            type: 'code results',
+                            content: 'four = 4',
+                            key: '003',
+                        },
+                    ],
+                    [
+                        {
+                            type: 'section title',
+                            content: "Let's break this down",
+                            key: '000',
+                        },
+                        {
+                            type: 'paragraph',
+                            content: 'const [a, ...b] = [1,2,3,4]',
+                            key: '001',
+                        },
+                        {
+                            type: 'paragraph',
+                            content: 'const [a,...[ , , four]] = [1,2,3,4]',
+                            key: '002',
+                        },
+                        {
+                            type: 'paragraph',
+                            content: 'we know that b = [2,3,4]',
+                            key: '003',
+                        },
+                        {
+                            type: 'paragraph',
+                            content:
+                                'and we know that two = 2, three = 3, four = 4',
+                            key: '004',
+                        },
+                        {
+                            type: 'paragraph',
+                            content: 'we could do const [ , , four] = b',
+                            key: '005',
+                        },
+                        {
+                            type: 'paragraph',
+                            content: 'and get the same thing',
+                            key: '006',
+                        },
+                        {
+                            type: 'paragraph',
+                            content:
+                                'so what we are able to do with just the rest operator is destructuring inside of destructuring',
+                            key: '007',
+                        },
+                    ],
+                    [
+                        {
+                            type: 'section title',
+                            content: 'Rest Operators in Function Parameters',
+                            key: '000',
+                        },
+                        {
+                            type: 'code',
+                            content: `
+const obj = {key1: 'value1', key2: 'value2', key3: 'value3'};
+const obj2 = {key2: 'value2'};
+const func = ({key2,...rest}) => {
+    /*what is rest equal to?*/
+    console.log(rest);
+}
+func(obj);//A
+func(obj2);//B
+`,
+                            key: '001',
+                        },
+                        {
+                            type: 'code results',
+                            content: `A: {key1: 'value1', key3: 'value3'}; B: {}`,
+                            key: '002',
+                        },
+                    ],
+                    [
+                        {
+                            type: 'section title',
+                            content:
+                                'Some practical applications of destructuring with the rest operator',
+                            key: '000',
+                        },
+                        {
+                            type: 'code',
+                            content: `
+/*props.btnStyles passed from parent component to BtnContainer Component*/
+/* [
+    {key: 'value',color: 'red', borderColor: 'blue', fontSize: '24px', content: 'click'},
+    {key: 'value2',color: 'black', borderColor: 'black', fontSize: '32px', content: 'press'}
+]*/
+
+const StyledBtn = styled\`
+    color: \${({color = 'black'}) => color};
+    border: 1px solid \${({borderColor = 'black'}) => borderColor};
+    font-size: \$(({fontSize = '16px'}) => fontSize};
+\`;
+
+const BtnContainer = ({btnStyles}) => {
+    return (
+        <div>
+            {
+                btnStyles.map({key,content,...styles} => 
+                    <StyledBtn key={key} {...styles}>{content}</StyledBtn>)
+            }
+        </div>
+    )
+}
+`,
+                            key: '001',
+                        },
                     ],
                 ],
             },
@@ -935,10 +1210,6 @@ class Form extends Component {
                         },
                     ],
                 ],
-            },
-            {
-                title: 'Some Quirks and Gotchas',
-                key: 9,
             },
         ],
     },

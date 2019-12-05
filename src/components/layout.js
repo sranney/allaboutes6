@@ -16,7 +16,6 @@ import GlobalStyle from './global';
 import BackgroundImg from './background-image';
 
 import { StyledAnchor } from '../helpers/styled-components/typography';
-import PageContext from '../helpers/context/PageContext';
 
 const StyledMain = styled.main`
     min-height: 70vh;
@@ -31,8 +30,7 @@ const Footer = styled.footer`
     color: var(--color-scale-0);
 `;
 
-const Layout = ({ children, location }) => {
-    const [show, setShow] = useState(true);
+const Layout = ({ children, location, show = true }) => {
     const data = useStaticQuery(graphql`
         query SiteTitleQuery {
             site {
@@ -49,9 +47,7 @@ const Layout = ({ children, location }) => {
                 <GlobalStyle />
                 {show && <Header siteTitle={data.site.siteMetadata.title} />}
                 <Container>
-                    <PageContext.Provider value={setShow}>
-                        <StyledMain>{children}</StyledMain>
-                    </PageContext.Provider>
+                    <StyledMain>{children}</StyledMain>
                     {show && (
                         <Footer>
                             © {new Date().getFullYear()}, Built by

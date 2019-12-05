@@ -3,7 +3,6 @@ import { useSpring, animated, config } from 'react-spring';
 import styled from 'styled-components';
 import tw from 'tailwind.macro';
 
-import PageContext from '../helpers/context/PageContext';
 import {
     SectionTitle,
     StyledLink,
@@ -13,8 +12,6 @@ import TOC from './toc';
 import Section from './section';
 
 import moduleData from '../modules/module-data';
-
-console.log(PageContext);
 
 const Panel = animated(styled.div`
     top: 0;
@@ -41,8 +38,6 @@ const Lesson = ({ transitionStatus, location }) => {
     const [currentMod, setCurrentMod] = useState(() =>
         moduleData?.find(mod => mod.category === location?.state?.category)
     );
-    const setShow = useContext(PageContext);
-    setShow(false);
 
     //from currentMod, if currentMod is found, put together an array of the titles for the TOC component to render
     const sections = useRef(currentMod?.sections || []);

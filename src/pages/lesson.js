@@ -11,13 +11,12 @@ const LessonPage = ({ location }) => {
         <TransitionState>
             {({ transitionStatus }) => (
                 <div>
-                    <Layout>
+                    <Layout show={false}>
                         <SEO title="Lessons" />
                         <Lesson
                             transitionStatus={transitionStatus}
                             location={location}
                         />
-                        ;
                     </Layout>
                 </div>
             )}
