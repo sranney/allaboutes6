@@ -114,7 +114,7 @@ const reducer = (state, action) => {
 const Lesson = ({ transitionStatus, location }) => {
     const lessThanLargeWidth = useMediaPredicate('(max-width:1023px)');
     const [moduleData, error, loading] = useFetchData(
-        `mod/${location.state.category}`
+        `mod/${location?.state?.category}`
     );
 
     const [
