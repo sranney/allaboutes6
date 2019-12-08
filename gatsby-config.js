@@ -1,6 +1,6 @@
 module.exports = {
     siteMetadata: {
-        title: `All About ES6`,
+        title: `Deep Dive Into ES6`,
         description: `A deep dive into ES6 features. Providing surprising and interesting code examples that will help you discover the beauty of JavaScript all over again.`,
         author: `@js_bacon_and_me`,
     },

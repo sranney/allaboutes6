@@ -1,7 +1,10 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
+import { useInView } from 'react-intersection-observer';
+
 import SectionContent from './section-content';
-import SectionNavigation from './section-navigation';
+import SectionNavigationContainer from './section-navigation-container';
+import SectionScrollAlert from './section-scroll-alert';
 
 const SectionContainer = styled.div`
     position: relative;
@@ -12,90 +15,50 @@ const SectionContainer = styled.div`
     &::-webkit-scrollbar {
         display: none;
     }
+    @media (max-width: 767px) {
+        top: 2vh;
+        height: 50vh;
+        overflow-y: auto;
+        padding-bottom: 24px;
+    }
 `;
 
-const Section = ({ currentSection, setCurrentSection, sections }) => {
+const Section = ({ currentSection, ...navigationData }) => {
     const [subsectionIdx, setSubsectionIdx] = useState(0);
-    const [sectionIdx, setSectionIdx] = useState(0);
-    const sectionContainerRef = useRef();
-    const sectionContentRef = useRef();
-
-    //bound the index values by 0 to the length of the array
-    const prevSubSection = () => {
-        setSubsectionIdx(i => (i - 1 >= 0 ? --i : i));
-    };
-
+    const prevSubSection = () => setSubsectionIdx(i => (i - 1 >= 0 ? --i : i));
     const nextSubSection = () =>
         setSubsectionIdx(i =>
             i + 1 < currentSection?.subsections?.length ? ++i : i
         );
 
-    const prevSection = () => setSectionIdx(i => (i - 1 >= 0 ? --i : i));
+    const ContainerRef = useRef();
 
-    const nextSection = () => {
-        setSectionIdx(i => (i + 1 < sections?.current?.length ? ++i : i));
-    };
+    const [bottomChildRef, bottomInView] = useInView({
+        root: ContainerRef.current,
+        threshold: 1,
+    });
 
-    useEffect(() => {
-        setCurrentSection(sections?.current?.[sectionIdx]);
-        setSubsectionIdx(0);
-    }, [sectionIdx, sections, setCurrentSection]);
-
-    useEffect(
-        () =>
-            setSectionIdx(
-                sections?.current?.findIndex(
-                    ({ title }) => title === currentSection.title
-                )
-            ),
-        [currentSection]
-    );
-
-    //TODO - get content height vs container height figured out
-    const sectionContainerClientHeight =
-        sectionContainerRef?.current?.clientHeight || 0;
-    const sectionContentContainerClientHeight =
-        sectionContentRef?.current?.clientHeight || 0;
-    useMemo(() => {
-        console.log(sectionContainerClientHeight || 'not defined');
-        console.log(sectionContentContainerClientHeight || 'not defined');
-    }, [sectionContainerClientHeight, sectionContentContainerClientHeight]);
+    useEffect(() => setSubsectionIdx(0), [currentSection]);
 
     return (
-        <SectionContainer ref={sectionContainerRef}>
-            {subsectionIdx !== 0 && (
-                <SectionNavigation
-                    tooltipcontent="back"
-                    direction="up"
-                    onClick={prevSubSection}
+        <SectionContainer ref={ContainerRef}>
+            {!bottomInView && (
+                <SectionScrollAlert
+                    msg="Scroll for more content"
+                    placement="section-content"
                 />
             )}
-            {sectionIdx !== 0 && (
-                <SectionNavigation
-                    tooltipcontent="previous section"
-                    direction="left"
-                    onClick={prevSection}
-                />
-            )}
-            <SectionContent
-                sectionContentRef={sectionContentRef}
-                subsection={currentSection?.subsections?.[subsectionIdx]}
+            <SectionNavigationContainer
+                {...navigationData}
+                currentSection={currentSection}
+                subsectionIdx={subsectionIdx}
+                prevSubSection={prevSubSection}
+                nextSubSection={nextSubSection}
             />
-            {(sectionIdx !== sections?.current?.length - 1 || false) && (
-                <SectionNavigation
-                    tooltipcontent="next section"
-                    direction="right"
-                    onClick={nextSection}
-                />
-            )}
-            {(subsectionIdx !== currentSection?.subsections?.length - 1 ||
-                false) && (
-                <SectionNavigation
-                    tooltipcontent="continue"
-                    direction="down"
-                    onClick={nextSubSection}
-                />
-            )}
+            <SectionContent
+                subsection={currentSection?.subsections?.[subsectionIdx]}
+                bottomChildRef={bottomChildRef}
+            />
         </SectionContainer>
     );
 };

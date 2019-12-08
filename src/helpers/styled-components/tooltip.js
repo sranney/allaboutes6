@@ -37,4 +37,5 @@ export const Tooltip = styled.div`
     color: var(--color-scale-8);
     padding: 16px;
     font-size: 25px;
+    z-index: 100;
 `;

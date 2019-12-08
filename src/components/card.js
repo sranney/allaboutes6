@@ -8,7 +8,7 @@ const StyledCard = animated(styled(StyledLink)`
     background-color: var(--color-scale-3-alpha-3);
     box-style: border-box;
     text-align: center;
-    ${tw`sm:h-12 md:h-auto 
+    ${tw`sm:h-12 md:h-12 
          w-screen md:w-1/6 
          py-12 md:p-10 
          shadow-2xl 
@@ -18,7 +18,7 @@ const StyledCard = animated(styled(StyledLink)`
     `};
 `);
 
-const Card = ({ item: { category } }) => {
+const Card = ({ item: category }) => {
     const [hover, setHover] = useState(false);
     const { x } = useSpring({
         x: hover ? 0.1 : 0,

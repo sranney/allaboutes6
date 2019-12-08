@@ -7,27 +7,34 @@ import {
     StyledDownArrow,
     StyledUpArrow,
 } from '../helpers/styled-components/icons';
-
 const SectionMenu = styled.div`
     position: absolute;
     top: 0;
     left: 0;
     height: 80vh;
-    &::after {
-        content: ${({ tooltipcontent }) => tooltipcontent};
-        z-index: 1000;
-        position: absolute;
+    @media (max-width: 767px) {
+        margin-right: 8px;
+        height: auto;
+        position: static;
+        display: inline-block;
     }
 `;
 
-const SectionNavigation = ({ tooltipcontent, direction, onClick }) => {
+const SectionNavigationButton = ({
+    tooltipcontent,
+    direction,
+    onClick,
+    smallScreen,
+}) => {
     const [hover, setHover] = useState(false);
     return (
         <SectionMenu
             onMouseEnter={() => setHover(true)}
             onMouseLeave={() => setHover(false)}
         >
-            {hover && <Tooltip direction={direction}>{tooltipcontent}</Tooltip>}
+            {!smallScreen && hover && (
+                <Tooltip direction={direction}>{tooltipcontent}</Tooltip>
+            )}
             {direction === 'up' && <StyledUpArrow onClick={onClick} />}
             {direction === 'down' && <StyledDownArrow onClick={onClick} />}
             {direction === 'left' && <StyledLeftArrow onClick={onClick} />}
@@ -36,4 +43,4 @@ const SectionNavigation = ({ tooltipcontent, direction, onClick }) => {
     );
 };
 
-export default SectionNavigation;
+export default SectionNavigationButton;

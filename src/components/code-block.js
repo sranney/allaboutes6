@@ -13,6 +13,9 @@ const StyledEditor = styled(Editor)`
     background-color: var(--color-scale-0-alpha-3);
     maxheight: 50vh;
     outline: none;
+    @media (max-width: 767px) {
+        font-size: 16px;
+    }
 `;
 
 const CodeBlock = ({ code }) => {

@@ -12,17 +12,23 @@ const ResultsTitle = styled(ContentSectionTitle)`
 
 const ResultsPar = styled(ContentPar)`
     display: ${({ show }) => (show ? 'block' : 'none')};
+    margin: 0;
 `;
 
 const CodeResults = ({ content, code }) => {
     const [show, setShow] = useState(false);
     useEffect(() => setShow(false), [content]);
+
     return (
         <>
             <ResultsTitle onClick={() => setShow(s => !s)}>
                 Results <span>🧐</span>
             </ResultsTitle>
-            {!code && <ResultsPar show={show}>{content}</ResultsPar>}
+            {Array.isArray(content)
+                ? content.map(text => (
+                      <ResultsPar show={show}>{text}</ResultsPar>
+                  ))
+                : !code && <ResultsPar show={show}>{content}</ResultsPar>}
             {code && show && <CodeBlock code={content} />}
         </>
     );
